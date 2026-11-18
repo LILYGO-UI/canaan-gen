@@ -1,0 +1,97 @@
+# Portable Debian userspace from pi-gen's default stage0-stage2 (lite) image.
+# Raspberry Pi firmware, kernel, raspi-*, rpi-*, and rpd-* packages are not
+# valid for the K230 riscv64 BSP and are intentionally excluded.
+
+# pi-gen stage0/stage1 and the K230 board profile.
+build-essential
+ca-certificates
+curl
+device-tree-compiler
+initramfs-tools
+locales
+netbase
+systemd-timesyncd
+
+# pi-gen stage2/01-sys-tweaks portable packages.
+apt-listchanges
+avahi-daemon
+bash-completion
+bluez
+bluez-firmware
+cifs-utils
+cloud-init
+console-setup
+debconf-utils
+dosfstools
+ed
+ethtool
+fbset
+file
+gdb
+gpiod
+htop
+keyboard-configuration
+less
+libmtp-runtime
+lua5.1
+luajit
+man-db
+manpages-dev
+mkvtoolnix
+ncdu
+ntfs-3g
+openssh-server
+p7zip-full
+parted
+pciutils
+pkg-config
+procps
+psmisc
+python-is-python3
+python3-gpiozero
+python3-libgpiod
+python3-smbus2
+python3-spidev
+python3-venv
+rsync
+ssh
+ssh-import-id
+strace
+sudo
+udisks2
+unzip
+usb-modeswitch
+usbutils
+v4l-utils
+zip
+
+# pi-gen stage2/02-net-tweaks portable packages.
+firmware-atheros
+firmware-brcm80211
+firmware-libertas
+firmware-mediatek
+firmware-realtek
+network-manager
+net-tools
+wireless-tools
+wpasupplicant
+
+# Canaan/K230 runtime and recovery requirements that pi-gen supplies through
+# its Raspberry Pi base image or dependencies rather than explicit entries.
+alsa-utils
+cloud-guest-utils
+dbus
+e2fsprogs
+fdisk
+iproute2
+iputils-ping
+i2c-tools
+iw
+kmod
+rfkill
+systemd-resolved
+systemd-sysv
+tzdata
+udev
+util-linux
+wget

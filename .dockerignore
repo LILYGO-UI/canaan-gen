@@ -1,0 +1,15 @@
+*
+!Dockerfile
+!Dockerfile.bsp
+!LICENSE
+!build.sh
+!scripts/
+!scripts/**
+!boards/
+!boards/**
+!keys/
+!keys/**
+!stage*/
+!stage*/**
+**/__pycache__/
+**/*.pyc

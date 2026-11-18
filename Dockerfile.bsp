@@ -1,0 +1,14 @@
+# The vendor Xuantie compiler runs on x86_64 Linux. The wrapper selects
+# linux/amd64 explicitly, including on Apple Silicon hosts.
+FROM ubuntu:24.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates git sed make binutils build-essential diffutils bash patch \
+    gzip bzip2 perl tar cpio unzip rsync file bc findutils wget libncurses-dev \
+    python3 python3-pcpp libssl-dev gawk cmake bison flex bash-completion \
+    parted curl xz-utils mtd-utils e2fsprogs dosfstools mtools kmod zstd \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /src
+COPY scripts/ /src/scripts/
+COPY Dockerfile.bsp /src/Dockerfile.bsp
+ENTRYPOINT ["python3", "/src/scripts/build-bsp.py"]

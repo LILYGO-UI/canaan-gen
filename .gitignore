@@ -1,0 +1,17 @@
+/config
+/work/
+/deploy/
+/.cache/
+*.log
+__pycache__/
+*.py[cod]
+.DS_Store
+.target-board.env
+*.img
+*.img.xz
+*.img.gz
+*.ext4
+*.tar
+*.tar.xz
+*.tar.gz
+*.deb

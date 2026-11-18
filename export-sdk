@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Export a Debian application SDK from a released canaan-gen image.
+set -euo pipefail
+base=$(cd -- "$(dirname -- "$0")" && pwd)
+usage='Usage: export-sdk IMAGE.img[.xz] [OUTPUT_DIR] (also accepts .rootfs.ext4[.xz])'
+if [[ ${1:-} == --help || ${1:-} == -h ]]; then echo "$usage"; exit 0; fi
+[[ $# -ge 1 && $# -le 2 ]] || { echo "$usage" >&2; exit 2; }
+input=$(cd -- "$(dirname -- "$1")" && pwd)/$(basename -- "$1")
+name=$(basename -- "$input")
+stem=${name%.xz}; stem=${stem%.img}; stem=${stem%.rootfs.ext4}
+output=${2:-$(dirname -- "$input")}
+mkdir -p -- "$output"
+output=$(cd -- "$output" && pwd)
+if [[ $(uname -s) == Linux && -z ${SDK_DOCKER_IMAGE:-} ]]; then
+    exec python3 "$base/scripts/export_sdk.py" "$input" "$output"
+fi
+engine=${DOCKER:-docker}
+image=${SDK_DOCKER_IMAGE:-canaan-gen:trixie}
+if [[ -z ${SDK_DOCKER_IMAGE:-} ]] && ! "$engine" image inspect "$image" >/dev/null 2>&1; then
+    "$engine" build -t "$image" "$base"
+fi
+mounts=()
+for item in "$name" "$stem.json" "$stem.packages.tsv"; do
+    path="$(dirname -- "$input")/$item"
+    [[ -f $path ]] || { echo "Missing SDK input: $path" >&2; exit 1; }
+    mounts+=(--mount "type=bind,src=$path,dst=/input/$item,readonly")
+done
+caps=(--cap-drop=ALL)
+if [[ $(id -u) == 0 ]]; then
+    caps+=(--cap-add=CHOWN --cap-add=FOWNER --cap-add=DAC_OVERRIDE --cap-add=SETUID --cap-add=SETGID)
+fi
+exec "$engine" run --rm --user "$(id -u):$(id -g)" "${caps[@]}" --security-opt=no-new-privileges \
+    "${mounts[@]}" --mount "type=bind,src=$base/scripts,dst=/sdk-tools,readonly" \
+    --mount "type=bind,src=$output,dst=/output" --entrypoint python3 "$image" \
+    /sdk-tools/export_sdk.py "/input/$name" /output

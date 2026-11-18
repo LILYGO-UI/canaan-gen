@@ -1,0 +1,21 @@
+# Debian 13 build-host packages
+bash
+binutils
+binfmt-support
+ca-certificates
+coreutils
+debootstrap
+debian-archive-keyring
+dosfstools
+e2fsprogs
+file
+git
+gpg
+kmod
+python3
+qemu-user-static
+qemu-user-binfmt
+rsync
+util-linux
+xz-utils
+zstd

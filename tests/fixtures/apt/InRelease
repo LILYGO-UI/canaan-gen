@@ -1,0 +1,47 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+Origin: LILYGO UI
+Label: LILYGO UI
+Suite: stable
+Codename: stable
+Date: Thu, 12 Nov 2026 12:26:51 GMT
+Architectures: all arm64 riscv64
+Components: main
+Description: LILYGO UI Debian packages
+MD5Sum:
+ ddff4c6edda5e2a9736aa00c377861b1 805 main/binary-all/Packages
+ 7cdf39ae78959f31df986d63c111319a 438 main/binary-all/Packages.gz
+ fc8eea272428bcf8ae1d79f977d48d44 492 main/binary-all/Packages.xz
+ d91d90997d3b67143a11faba3b8caa00 49189 main/binary-arm64/Packages
+ b9af7070b08b7b569264efa2fc39fc0f 9068 main/binary-arm64/Packages.gz
+ 0ec319791ad1caacb1642f5ad1e18a41 8020 main/binary-arm64/Packages.xz
+ de70f9a2f5ae0dfd036670aed5cd2160 10402 main/binary-riscv64/Packages
+ 25b374dbd94fc9e7091ebd27af3d27e1 2665 main/binary-riscv64/Packages.gz
+ 631f988453126f3c11799df65ecbf956 2592 main/binary-riscv64/Packages.xz
+SHA256:
+ 30b61909587cc988338319b86f8d5e99801f1d9f43e81c66d8be4a33a9d7cc50 805 main/binary-all/Packages
+ c1f676a09eebe2a0deefd166102e12e6ebb0c0005099f52ac2255257d63b8a8f 438 main/binary-all/Packages.gz
+ e82ccb14213dbc2044c679ed1964d0dda17a8536aa7f2f3c34ab1e7af8df43c5 492 main/binary-all/Packages.xz
+ 284a1c821cc50996e12a8c417f76c040e58d1625cb35b1e88e22b79541d31410 49189 main/binary-arm64/Packages
+ a0d8276ba82438245242768f17e103cd20d33e9ee77f9689423ec721e3820583 9068 main/binary-arm64/Packages.gz
+ dc8accb0d1afe9ae672ef6967ea42bf8a2b1ab38a1972169b53c148ccff592c3 8020 main/binary-arm64/Packages.xz
+ a532dac038f004ca03774003c17dd949a0eab22a21aa94c6e04245d13a83ce65 10402 main/binary-riscv64/Packages
+ 4c3b31625521096e6e41c837e445ae1b5fc77547339dba391f1928ccf18b3e9b 2665 main/binary-riscv64/Packages.gz
+ f7dc38876860e9b8f6cd3fa5d79d32708bbae2152bcab5afe73dc93d854fff22 2592 main/binary-riscv64/Packages.xz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+sdbsozmIcttU1OhwwkSC33Jj0oFAmr1sPsACgkQwwkSC33J
+j0omOhAAwFmV5UVBgRCmeEZ8+lfSyWTRbt0PuEAqnJMfFKg6pB2BizRqWpKGDgcG
+sNvvdfCGIo61NFXWBLxchS7k8cuUgRn7qyT1Gnwzl0swK8mGEFcYzZZ8+denyNf0
+UGRHGrLpMktoO6odeXequBPA4oitr6R6oOWTgdrEMwO1lDerfLFOY9bZP29GIFdf
+5OHkeE9wjr+fP5TmNaBcbqSLXrZuQO1LIW9iEK1o9SkrGURp8wqojmyEe7Lysyfk
++SS+6bZvzoP4xoQI2sHXb/Tq7F103MfhFWvizjkhFKYOmSqq+ZlEHpIY7DOl54aa
+pyBrIfPow1f3awrPTYr6pWOqfMCYdcw8HCQZs/M1XSKKEvIpKcbSVvYi/gbeefn8
+oZ7U4f4E1EkkpdMykh4N4Oik4aucc7OffNv4Kdz7bWByzzBCaaA13fVB3o36ez2B
+R1ZPiCC9rzM3NrO0QrD9xAIh3ossMPHT/kimFcKBXt4ysj5vQ7hFDqff+3UedW0o
+tWaBf0i1i+wKLTvOSfrVNSSMwYVnHMqRTI4biYrR9GiyXTnQIx/dWJRWqbTvTt5M
+iIlOT+DxAYlJZ7EW4xGLqy0auvCalVvueNLAePvDtrFMAdRU7ujVEr+fiHKHp17N
+jNAtLw2xfYCRfE0QOvnTT7DCMcXGBFCh6NIOvD161FOo8IFwlZA=
+=EwH4
+-----END PGP SIGNATURE-----

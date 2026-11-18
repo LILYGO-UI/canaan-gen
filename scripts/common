@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Shared host helpers. Every caller enables errexit, nounset and pipefail.
+log() { printf '[%s] %s\n' "$(date -u +%H:%M:%S)" "$*"; }
+die() { printf 'canaan-gen: %s\n' "$*" >&2; exit 1; }
+
+on_chroot() {
+    chroot "${ROOTFS_DIR}" /usr/bin/env -i \
+        HOME=/root PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
+        TERM=dumb DEBIAN_FRONTEND=noninteractive LC_ALL=C \
+        /bin/bash -e -u -o pipefail "$@"
+}
+
+mount_rootfs() {
+    local point
+    for point in proc sys dev run tmp; do
+        [[ ! -L "${ROOTFS_DIR}/${point}" ]] || die "Refusing symlink mount point: $point"
+    done
+    mkdir -p "${ROOTFS_DIR}"/{proc,sys,dev,run,tmp}
+    mount -t proc proc "${ROOTFS_DIR}/proc"
+    mount -t sysfs -o ro sysfs "${ROOTFS_DIR}/sys"
+    mount --bind /dev "${ROOTFS_DIR}/dev"
+    mount --make-private "${ROOTFS_DIR}/dev"
+    mount -t tmpfs -o mode=0755 tmpfs "${ROOTFS_DIR}/run"
+    mount -t tmpfs -o mode=1777 tmpfs "${ROOTFS_DIR}/tmp"
+}
+
+unmount_rootfs() {
+    local point
+    for point in tmp run dev sys proc; do
+        if mountpoint -q "${ROOTFS_DIR}/${point}"; then
+            umount "${ROOTFS_DIR}/${point}" || return 1
+        fi
+    done
+}
+export -f log die on_chroot mount_rootfs unmount_rootfs
+
+apply_rootfs_overlay() {
+    [[ -n "${ROOTFS_OVERLAY:-}" ]] || return 0
+    local reserved
+    # Never apply an overlay through live host bind mounts.
+    for reserved in dev proc sys run tmp; do
+        [[ ! -e "$ROOTFS_OVERLAY/$reserved" && ! -L "$ROOTFS_OVERLAY/$reserved" ]] ||
+            die "ROOTFS_OVERLAY must not contain the runtime path: $reserved"
+    done
+    unmount_rootfs
+    rsync -aH --safe-links "$ROOTFS_OVERLAY/" "$ROOTFS_DIR/"
+    mount_rootfs
+}
+export -f apply_rootfs_overlay

@@ -1,0 +1,16 @@
+[Unit]
+Description=Grow the Canaan root filesystem to fit the SD card
+DefaultDependencies=no
+After=local-fs.target systemd-remount-fs.service
+Before=sysinit.target shutdown.target cloud-init-local.service
+Conflicts=shutdown.target
+ConditionPathIsReadWrite=/
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/canaan-grow-rootfs
+RemainAfterExit=yes
+TimeoutStartSec=0
+
+[Install]
+WantedBy=sysinit.target

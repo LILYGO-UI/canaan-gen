@@ -1,0 +1,69 @@
+# Copy to config. This is a trusted Bash fragment. Keep local secrets out of Git.
+BOARD=t-display-k230
+RELEASE=trixie
+# Board Linux patches, audio requirements and Debian runtime configuration.
+# Defaults to ../lilygo-linux-dtoverlays beside canaan-gen.
+# LILYGO_DTOVERLAYS_DIR=/absolute/path/lilygo-linux-dtoverlays
+# Build the pinned vendor SDK, bootloader, kernel, DTBs and modules first.
+# source is the recommended mode; no previously downloaded firmware is needed.
+BSP_MODE=source
+BSP_JOBS=4
+# Free-space guard before downloading/building (GiB). Full builds need ample
+# additional space for Buildroot, the toolchain and Debian; default is 60 GiB.
+BSP_MIN_FREE_GIB=60
+# Docker persists sources/build output and the toolchain in named volumes.
+# BSP_CACHE_VOLUME=canaan-gen-bsp-cache
+# Native x86_64 Ubuntu 24.04 builds use this directory instead:
+# BSP_WORK_DIR=/absolute/path/canaan-bsp-cache
+# To use an independently completed BSP, set BSP_MODE=prebuilt and BSP_DIR.
+# It must pass the same mandatory keyboard/audio/boot-template checks.
+# BSP_DIR=/absolute/path/sdk/output/k230_canmv_t_display_rm69a10_defconfig
+# Optional override; by default BSP_DIR/images/sysimage-sdcard.img.
+# BSP_IMAGE=/absolute/path/sysimage-sdcard.img
+# Optional override; normally discovered at BSP_DIR/build/linux-*/.config.
+# BSP_KERNEL_CONFIG=/absolute/path/linux/.config
+# Source builds include the camera runtime. For an imported BSP, set to 1
+# only when it was imported with --include-camera-runtime.
+# This adds the vendor GC2093 ISP daemon, tuning data and a Debian systemd
+# service that loads the vvcam kernel modules in the required order.
+BSP_CAMERA_RUNTIME=1
+IMG_NAME=canaan-debian-t-display-k230
+DEBIAN_MIRROR=https://deb.debian.org/debian
+TARGET_HOSTNAME=t-display-k230
+TIMEZONE=Asia/Shanghai
+LOCALE=en_US.UTF-8
+# launcher: show the graphical wizard and create the owner on the device.
+# Requires lilygo-ui-launcher in LILYGO_UI_PACKAGES and the signed APT repository.
+# preset: create FIRST_USER_NAME during the build (for headless/base images).
+ACCOUNT_SETUP=launcher
+FIRST_USER_NAME=lilygo
+# In preset mode, set a hash produced by mkpasswd -m yescrypt,
+# enclosed in single quotes; never put a plaintext password here.
+FIRST_USER_PASSWORD_HASH=''
+ENABLE_SSH=1
+# Launcher mode: log in with the username/password created in the on-device wizard.
+# Preset mode: enabling SSH requires an authorized_keys file or a password hash.
+SSH_AUTHORIZED_KEYS_FILE=''
+# Install the selected Debian riscv64 packages.
+# For a base image use ACCOUNT_SETUP=preset and LILYGO_UI_INSTALL=0.
+LILYGO_UI_INSTALL=apt
+LILYGO_UI_APT_URL=https://lilygo-ui.github.io/packages
+# Default: the reviewed public key bundled in keys/lilygo-ui-archive-keyring.gpg.
+# LILYGO_UI_APT_KEY_FILE=/absolute/path/reviewed-archive-keyring.gpg
+# Default: 16 packages (AppKit, Launcher and 14 applications) in stage3/packages.
+# The other 10 temporarily excluded packages are in stage3/packages.pending.
+# A missing riscv64/all package stops preflight; there is no local DEB fallback.
+# To explicitly build a smaller image:
+# LILYGO_UI_PACKAGES='lilygo-ui-appkit-dev lilygo-ui-launcher lilygo-ui-template lilygo-ui-calculator'
+# Optional directory overlay applied last, then final image sanitation runs.
+# The board services read /etc/default/lilygo-k230-{audio,peripherals,power}
+# (audio route, modem/LoRa power, charge current and voltage, low-battery
+# threshold); put edited copies in the overlay to change an image's defaults.
+ROOTFS_OVERLAY=''
+# Initial image free-space allowance. At boot, p2/ext4 grow to fit the SD card.
+ROOTFS_EXTRA_MB=512
+DEPLOY_COMPRESSION=xz
+# Publish the matching Debian application SDK beside the image on each build.
+EXPORT_SDK=1
+# Native builds may override WORK_DIR and DEPLOY_DIR. Docker keeps work in a
+# Linux volume and copies deploy/ to the host after successful completion.
