@@ -309,7 +309,7 @@ class ShellBoundaryTests(unittest.TestCase):
         self.assertEqual(apt[apt.index('--packages') + 1].split(), packages.split())
         self.assertFalse(self.work.exists())
 
-    def test_native_default_package_selection_excludes_pending_packages(self):
+    def test_native_default_package_selection_excludes_unpublished_imu(self):
         self.prepare_apt_preflight()
         result = subprocess.run([BASH, str(PROJECT / 'build.sh'), '-c', str(self.config), '--check'],
                                 env=self.environment, capture_output=True, text=True)
@@ -318,13 +318,11 @@ class ShellBoundaryTests(unittest.TestCase):
         apt = next(call for call in calls if Path(call[0]).name == 'check-apt.py')
         selected = set(apt[apt.index('--packages') + 1].split())
         self.assertLessEqual({'lilygo-ui-appkit-dev', 'lilygo-ui-launcher', 'lilygo-ui-store', 'lilygo-ui-settings',
-                             'lilygo-ui-calculator', 'lilygo-ui-camera'}, selected)
-        self.assertTrue(selected.isdisjoint({
-            'lilygo-ui-cellular', 'lilygo-ui-imu',
-            'lilygo-ui-meshtastic', 'lilygo-ui-monitor', 'lilygo-ui-music',
-            'lilygo-ui-radio', 'lilygo-ui-sensors', 'lilygo-ui-terminal',
-            'lilygo-ui-xiaozhi', 'lilygo-ui-youtube',
-        }))
+                             'lilygo-ui-calculator', 'lilygo-ui-camera', 'lilygo-ui-cellular',
+                             'lilygo-ui-meshtastic', 'lilygo-ui-monitor', 'lilygo-ui-music',
+                             'lilygo-ui-radio', 'lilygo-ui-sensors', 'lilygo-ui-terminal',
+                             'lilygo-ui-xiaozhi', 'lilygo-ui-youtube'}, selected)
+        self.assertNotIn('lilygo-ui-imu', selected)
         self.assertNotIn('lilygo-ui-mesa-vc4', selected)
 
     def test_missing_apt_packages_stop_before_creating_a_rootfs(self):
@@ -615,6 +613,30 @@ class BoardStageTests(unittest.TestCase):
             self.assertIn(package, packages)
         # The register helper is compiled inside the image.
         self.assertIn("build-essential", packages)
+
+    def test_login_profile_adds_administrative_binary_directories(self):
+        packages = (PROJECT / "stage1/packages").read_text().split()
+        self.assertIn("net-tools", packages)
+        script_path = PROJECT / "stage1/files/etc/profile.d/10-canaan-gen-path.sh"
+        stage = (PROJECT / "stage1/00-run.sh").read_text()
+        self.assertIn("stage1/files/etc/profile.d/10-canaan-gen-path.sh", stage)
+        self.assertTrue(script_path.is_file())
+        script = script_path.read_text()
+        self.assertIn("/usr/sbin", script)
+        self.assertIn("/sbin", script)
+
+        cases = {
+            "": "/usr/sbin:/sbin",
+            "/usr/bin:/bin": "/usr/bin:/bin:/usr/sbin:/sbin",
+            "/usr/sbin:/usr/bin:/sbin:/bin": "/usr/sbin:/usr/bin:/sbin:/bin",
+        }
+        for initial, expected in cases.items():
+            with self.subTest(initial=initial):
+                result = subprocess.run(
+                    [BASH, "-c", 'PATH="$1"; export PATH; . "$2"; printf "%s" "$PATH"',
+                     "bash", initial, str(script_path)],
+                    capture_output=True, text=True, check=True)
+                self.assertEqual(result.stdout, expected)
 
 
 if __name__ == "__main__":

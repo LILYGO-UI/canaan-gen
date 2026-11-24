@@ -75,6 +75,12 @@ apt-get -o Acquire::Retries=3 update
 apt-get -o Acquire::Retries=3 install --no-install-recommends -y "$@"
 CHROOT
 
+# Debian installs administrative networking tools such as ifconfig in /usr/sbin.
+# Make those directories available to users after SSH or serial login.
+install -d -m 0755 "${ROOTFS_DIR}/etc/profile.d"
+install -m 0644 "${BASE_DIR}/stage1/files/etc/profile.d/10-canaan-gen-path.sh" \
+    "${ROOTFS_DIR}/etc/profile.d/10-canaan-gen-path.sh"
+
 [[ -f "${ROOTFS_DIR}/usr/share/zoneinfo/${TIMEZONE}" ]] || die "Unknown TIMEZONE: ${TIMEZONE}"
 printf '%s\n' "${TIMEZONE}" > "${ROOTFS_DIR}/etc/timezone"
 ln -snf "../usr/share/zoneinfo/${TIMEZONE}" "${ROOTFS_DIR}/etc/localtime"

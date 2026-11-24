@@ -1,12 +1,2 @@
-# Temporarily excluded until riscv64/all packages are published.
-# Move these entries back to stage3/packages when they are available.
-lilygo-ui-cellular
+# IMU intentionally remains excluded because no riscv64 package is required.
 lilygo-ui-imu
-lilygo-ui-meshtastic
-lilygo-ui-monitor
-lilygo-ui-music
-lilygo-ui-radio
-lilygo-ui-sensors
-lilygo-ui-terminal
-lilygo-ui-xiaozhi
-lilygo-ui-youtube

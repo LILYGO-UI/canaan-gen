@@ -79,9 +79,9 @@ lilygo-k230-audio-route external   # 外置扬声器
 
 原厂引脚表给出的 LoRa 连接：`/dev/spidev0.0`（片选 IO14 由控制器驱动）、复位
 IO5、BUSY IO19、中断 IO20，均在标签为 `9140b000.gpio` 的控制器上；供电 IO44 在
-`9140c000.gpio` 上。上游 `meshtasticd` 的 Debian 13 软件源没有 riscv64 构建（见
-`launcher/k230-build-logs/meshtastic-dependency-review.txt`），镜像没有预装无线电
-守护进程。
+`9140c000.gpio` 上。stage2 安装 K230 板级选择器。配合带两份 K230 电台配置的
+riscv64 `meshtasticd` 包，默认服务在供电就绪后按 SPI 签名选择 SX1262 或 LR2021，
+Meshtastic UI 使用本机 TCP 4403。`meshtasticd` 仍是可选软件包。
 
 ### lilygo-k230-power
 

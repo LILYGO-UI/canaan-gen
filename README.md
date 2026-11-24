@@ -6,8 +6,8 @@ BSP 启动链、Linux 内核、设备树和 boot 分区，用 Debian 替换 Buil
 默认的 `BSP_MODE=source` 会先从固定提交编译 SDK/Buildroot，加入本地板级补丁，
 生成并检查成套内核、设备树、模块和启动模板，再进入 Debian 构建。
 
-当前默认清单从签名 APT 源安装 AppKit、Launcher 和 `stage3/packages` 中的 14 个应用。
-其余 10 个尚缺 riscv64/all 发布的包已暂移至 `stage3/packages.pending`。
+当前默认清单从签名 APT 源安装 AppKit、Launcher 和 `stage3/packages` 中的 23 个应用。
+仅 `lilygo-ui-imu` 按产品要求不发布 riscv64 包，保留在 `stage3/packages.pending`。
 缺少任何已选包时预检停止，不导入本地 `.deb`。首次启动可进入图形
 引导，依次配置地区、创建用户名和密码，再选择网络与更新；网络和更新可以跳过。
 `ACCOUNT_SETUP=launcher` 模式不预建普通账号，没有固定默认用户名或密码。
@@ -385,12 +385,12 @@ Debian 首次设置。Buildroot 的 TGZ/SysV 构建入口继续保留。不要�
 LILYGO_UI_INSTALL=apt
 LILYGO_UI_APT_URL=https://lilygo-ui.github.io/packages
 # 公钥默认使用项目内 keys/lilygo-ui-archive-keyring.gpg。
-# 省略 LILYGO_UI_PACKAGES 时使用 stage3/packages 的当前 16 个包。
+# 省略 LILYGO_UI_PACKAGES 时使用 stage3/packages 的当前 25 个包。
 ```
 
-当前清单包含 AppKit、Launcher 和 14 个应用；暂时移除的 10 个包保存在
-`stage3/packages.pending`，待 riscv64/all 发布后移回 `stage3/packages`。
-清单不包含树莓派专用的 Mesa VC4，也不要求尚未提供 K230 运行方案的 `meshtasticd`。
+当前清单包含 AppKit、Launcher 和 23 个应用；按产品要求不发布 riscv64 包的
+`lilygo-ui-imu` 保存在 `stage3/packages.pending`。
+清单不包含树莓派专用的 Mesa VC4，`meshtasticd` 为可选 riscv64 软件包，板载电台选择见[硬件支持](docs/hardware-support.md)。
 需要精简镜像时可以显式设置
 `LILYGO_UI_PACKAGES`，例如：
 
